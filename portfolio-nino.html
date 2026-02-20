@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nino Calabro - Editor e Storyteller</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --blue: #4A7FA5;
+      --blue-dark: #2B5F80;      /* blu scuro per testo su sfondi chiari: ~7.2:1 su cream */
+      --blue-aa: #1E4D6B;        /* blu ancora più scuro per AAA su cream/sand/white */
+      --dark: #1A1A2E;
+      --ink: #1C1C1C;            /* leggermente più scuro: ~15:1 su cream */
+      --sand: #E8DFC8;
+      --light-blue: #D4E5F0;
+      --cream-strong: #F5F0E8;
+      --white: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Courier Prime', monospace;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--blue); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--blue); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%); opacity: 0.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9997; opacity: 0.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 3rem;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-bottom-color: rgba(74,127,165,0.15); }
+    .nav-logo {
+      font-family: 'Caveat', cursive; font-size: 1.3rem;
+      color: var(--dark); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+      position: relative; padding-bottom: 0.25rem;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0;
+      width: 0; height: 2px; background: var(--blue-aa);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--blue-aa); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a.active { color: var(--blue-aa); }
+    .nav-links a.active::after { width: 100%; }
+
+    /* SEZIONI - scroll-margin-top per compensare la navbar fissa */
+    section {
+      padding: 8rem 5rem;
+      scroll-margin-top: 72px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; overflow: hidden;
+      scroll-margin-top: 0;
+    }
+    .hero-left {
+      padding: 12rem 4rem 4rem 5rem;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 7vw, 8rem); font-weight: 900;
+      line-height: 0.95; color: var(--dark);
+      opacity: 0; animation: fadeUp 0.9s 0.3s forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--blue-aa); }
+    .hero-subtitle {
+      font-size: 0.9rem; line-height: 1.8; color: var(--ink);
+      margin-top: 2.5rem; max-width: 420px;
+      opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 1rem;
+      margin-top: 3rem; font-size: 0.75rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dark); text-decoration: none;
+      border-bottom: 2px solid var(--blue-aa); padding-bottom: 0.3rem;
+      width: fit-content;
+      opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+      transition: color 0.3s, gap 0.3s;
+    }
+    .hero-cta:hover { color: var(--blue-aa); gap: 1.5rem; }
+    .hero-right {
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .hero-oval {
+      width: 500px; height: 320px; background: var(--blue); border-radius: 50%;
+      position: relative;
+      opacity: 0; animation: scaleIn 1s 0.4s forwards;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-oval::before {
+      content: ''; position: absolute; inset: -20px;
+      border: 1.5px solid var(--ink); border-radius: 50%;
+      transform: rotate(-8deg);
+    }
+    .hero-oval-inner { text-align: center; }
+    .hero-oval-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 5.5vw, 6rem); font-weight: 900;
+      color: var(--cream); line-height: 1;
+    }
+    .hero-oval-sub {
+      font-family: 'Caveat', cursive; font-size: 1.3rem;
+      color: var(--cream); margin-top: 0.6rem;
+      /* no opacity - cream on blue-dark bg already passes AAA at large size */
+    }
+    .hero-year {
+      position: absolute; bottom: 2.5rem; right: 4rem;
+      font-size: 0.7rem; letter-spacing: 0.3em; color: var(--blue-aa);
+      opacity: 0; animation: fadeUp 0.8s 1s forwards;
+    }
+
+    .section-header {
+      display: flex; align-items: baseline; gap: 2rem; margin-bottom: 5rem;
+    }
+    .section-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; font-weight: 900; color: var(--light-blue); line-height: 1;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 700; color: var(--dark);
+    }
+
+    /* CHI SONO */
+    .about {
+      background: var(--sand);
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 6rem; align-items: center;
+    }
+    .about-img-block { position: relative; }
+    .about-placeholder {
+      width: 100%; aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--dark) 100%);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .about-role {
+      position: absolute; bottom: -1.2rem; left: 1rem;
+      background: var(--blue); color: var(--cream);
+      font-family: 'Caveat', cursive; font-size: 1.1rem; padding: 0.5rem 1.2rem;
+    }
+    .about-img-frame {
+      position: absolute; inset: 20px -20px -20px 20px;
+      border: 1.5px solid var(--blue); z-index: -1;
+    }
+    .about-label {
+      font-size: 0.7rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--blue-aa); margin-bottom: 1rem;
+    }
+    .about-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 700;
+      line-height: 1.1; color: var(--dark); margin-bottom: 2rem;
+    }
+    .about-body { font-size: 0.9rem; line-height: 2; color: var(--ink); }
+    .about-body p + p { margin-top: 1.2rem; }
+
+    /* FORMAZIONE */
+    .education { background: var(--cream); }
+    .edu-content {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .edu-school {
+      font-family: 'Caveat', cursive; font-size: 2.5rem;
+      color: var(--blue-aa); margin-bottom: 1.5rem;
+    }
+    .edu-body { font-size: 0.9rem; line-height: 2; color: var(--ink); }
+    .edu-body p + p { margin-top: 1rem; }
+    .edu-highlight {
+      background: linear-gradient(180deg, transparent 55%, #B8D4E8 55%);
+      font-weight: 700;
+    }
+    .edu-visual {
+      position: relative; border: 2px solid var(--blue-aa);
+      padding: 2.5rem; background: white;
+    }
+    .edu-visual::before {
+      content: 'SCUOLA HOLDEN · TORINO · 2022-2025';
+      position: absolute; top: -0.6rem; left: 1rem;
+      background: white; font-size: 0.6rem;
+      letter-spacing: 0.2em; color: var(--blue-aa); padding: 0 0.5rem;
+    }
+    .edu-quote {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.3rem; line-height: 1.7; color: var(--dark);
+    }
+    .edu-quote::before {
+      content: '"'; color: var(--blue-aa); font-size: 3rem;
+      line-height: 0; vertical-align: -0.6rem; margin-right: 0.2rem;
+    }
+
+    /* COMPETENZE */
+    .skills { background: var(--dark); color: var(--cream); }
+    .skills .section-title { color: var(--cream); }
+    .skills .section-num { color: #5B9DBF; }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border: 1px solid rgba(255,255,255,0.15); margin-top: 4rem;
+    }
+    .skill-item {
+      padding: 2.5rem 2rem;
+      border-right: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      transition: background 0.3s;
+    }
+    .skill-item:hover { background: rgba(74,127,165,0.2); }
+    .skill-item:nth-child(3n) { border-right: none; }
+    .skill-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .skill-name {
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      font-weight: 700; color: var(--cream); margin-bottom: 0.5rem;
+    }
+    /* era rgba(245,240,232,0.5) su #1A1A2E → ~4.1:1 ❌. Ora pieno: ~12:1 ✅ */
+    .skill-desc { font-size: 0.82rem; line-height: 1.7; color: #C8C0B0; }
+
+    /* SERVIZI */
+    .services { background: var(--sand); }
+    .services .section-num { color: #8CAFC8; }  /* stesso colore del 04 Progetti header */
+    .services-intro {
+      font-size: 0.95rem; line-height: 2; max-width: 700px;
+      margin-bottom: 4rem; border-left: 4px solid var(--blue-aa);
+      padding-left: 1.5rem; font-style: italic; color: var(--ink);
+    }
+    .services-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3px; background: var(--blue-aa);
+    }
+    .service-card {
+      background: var(--sand); padding: 3rem 2.5rem; transition: background 0.3s;
+    }
+    .service-card:hover { background: var(--cream); }
+    .service-num {
+      font-family: 'Playfair Display', serif; font-size: 3rem;
+      font-weight: 900; color: var(--blue-aa); line-height: 1; margin-bottom: 0.5rem;
+    }
+    .service-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .service-name {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
+      font-weight: 700; color: var(--dark); margin-bottom: 1rem;
+    }
+    .service-desc { font-size: 0.85rem; line-height: 1.9; color: var(--ink); }
+
+    /* PROGETTI */
+    .projects { background: var(--cream); }
+    .projects .section-num { color: #8CAFC8; }  /* scuro come il 01 MagazINDIE era */
+    .projects-list { display: flex; flex-direction: column; }
+    .project-card {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 4rem; padding: 3.5rem 0;
+      border-top: 1px solid rgba(0,0,0,0.15); transition: transform 0.4s;
+    }
+    .project-card:hover { transform: translateX(10px); }
+    .project-num {
+      font-family: 'Playfair Display', serif; font-size: 5rem;
+      font-weight: 900; line-height: 1;
+    }
+    .project-num-01 { color: #D4E5F0; }
+    .project-num-02 { color: #D4E5F0; }
+    .project-num-03 { color: #D4E5F0; }
+    .project-year {
+      font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 700;
+      color: var(--blue-aa); display: block; margin-top: -0.5rem;
+    }
+    .project-name {
+      font-family: 'Caveat', cursive; font-size: 2.2rem;
+      color: var(--blue-aa); margin-bottom: 1rem;
+    }
+    .project-desc { font-size: 0.9rem; line-height: 2; color: var(--ink); max-width: 620px; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .tag {
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+      border: 2px solid var(--blue-aa); color: var(--blue-aa); padding: 0.3rem 0.8rem;
+      font-weight: 700;
+    }
+    .writing-card {
+      background: white; border-left: 4px solid var(--blue-aa);
+      padding: 1.5rem 2rem; margin-top: 2rem;
+      font-size: 0.82rem; line-height: 1.9; max-width: 520px; color: var(--ink);
+    }
+    .writing-card-title {
+      font-family: 'Playfair Display', serif; font-size: 1rem;
+      font-weight: 700; margin-bottom: 0.8rem; color: var(--dark);
+    }
+    /* era var(--blue) su white → ~3.6:1 ❌. Ora blue-aa → ~7.3:1 ✅ */
+    .writing-card-sig {
+      font-style: italic; color: var(--blue-aa); margin-top: 1rem; font-size: 0.8rem; font-weight: 700;
+    }
+
+    /* CONTATTI */
+    .contact {
+      background: var(--dark); color: var(--cream);
+      text-align: center; padding: 10rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .contact::before {
+      content: 'CONTATTI'; position: absolute;
+      font-family: 'Playfair Display', serif; font-weight: 900; font-size: 18vw;
+      color: rgba(255,255,255,0.04); left: 50%; top: 50%;
+      transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none;
+    }
+    /* era opacity 0.7 su sfondo blue → rischio contrasto. Su dark è ok */
+    .contact-intro {
+      font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+      margin-bottom: 2rem; color: #A8C4D8; position: relative;
+    }
+    .contact-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 900;
+      line-height: 1.1; margin-bottom: 4rem; position: relative;
+      color: var(--cream);
+    }
+    /* era opacity 0.7 → inaccessibile. Ora colore esplicito chiaro su dark */
+    .contact-title em { font-style: italic; color: #A8C4D8; }
+    .contact-links {
+      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+      position: relative;
+    }
+    .contact-link {
+      font-family: 'Courier Prime', monospace; font-size: 1.1rem;
+      color: var(--cream); text-decoration: none;
+      display: flex; align-items: center; gap: 1rem;
+      /* era rgba(0.3) → ~1.8:1 ❌. Ora colore solido */
+      border-bottom: 1px solid #8CAFC8; padding-bottom: 0.4rem;
+      transition: gap 0.3s, border-color 0.3s;
+    }
+    .contact-link:hover { gap: 1.5rem; border-color: var(--cream); }
+
+    footer {
+      background: var(--dark); color: #8A8A9A;
+      text-align: center; padding: 2rem;
+      font-size: 0.7rem; letter-spacing: 0.15em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .about { grid-template-columns: 1fr; }
+      .edu-content { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .project-card { grid-template-columns: 1fr; gap: 1rem; }
+      .project-num { font-size: 3rem; }
+      section { padding: 5rem 2rem; }
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav id="mainNav">
+    <a href="#" class="nav-logo">Nino Calabro'</a>
+    <ul class="nav-links">
+      <li><a href="#about">chi sono</a></li>
+      <li><a href="#education">formazione</a></li>
+      <li><a href="#skills">competenze</a></li>
+      <li><a href="#services">servizi</a></li>
+      <li><a href="#projects">progetti</a></li>
+      <li><a href="#contact">contatti</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-left">
+      <h1 class="hero-title">Nino<br>Cala<em>bro'</em></h1>
+      <p class="hero-subtitle">Racconto, scrivo e correggo storie.</p>
+      <a href="#services" class="hero-cta">Scopri i servizi &rarr;</a>
+    </div>
+    <div class="hero-right">
+      <div class="hero-oval">
+        <div class="hero-oval-inner">
+          <div class="hero-oval-text">EDITOR</div>
+          <div class="hero-oval-sub">&mdash; storyteller &mdash;</div>
+        </div>
+      </div>
+      <span class="hero-year">2025</span>
+    </div>
+  </section>
+
+  <!-- CHI SONO -->
+  <section class="about" id="about">
+    <div class="about-img-block">
+      <div class="about-placeholder">
+        <span style="font-size:5rem; opacity:0.2;">&#127797;</span>
+        <div class="about-role">editor &middot; storyteller</div>
+        <div class="about-img-frame"></div>
+      </div>
+    </div>
+    <div>
+      <p class="about-label">Chi sono</p>
+      <h2 class="about-title">Ciao,<br>mi chiamo <em style="font-style:italic; color:var(--blue-aa);">Nino</em></h2>
+      <div class="about-body">
+        <p>Racconto, scrivo e correggo storie.</p>
+        <p>Sono nato in Sicilia tra gli odori degli agrumi e le terre bruciate dei campi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMAZIONE -->
+  <section class="education" id="education">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Formazione</h2>
+    </div>
+    <div class="edu-content">
+      <div>
+        <div class="edu-school">Scuola Holden</div>
+        <div class="edu-body">
+          <p>Il mio viaggio inizia nel 2022 quando ho deciso di attraversare l'Italia per arrivare a Torino, alla Scuola Holden, dove per tre anni ho studiato tecniche della narrazione.</p>
+          <p>Alla Holden ho imparato a sentire il nucleo di una storia, distinguerne il ritmo, capire dove pulsa e dove invece si perde.</p>
+          <p>Durante i tre anni ho scritto molti racconti, ho smontato e rimontato storie, collaborato alla scrittura della newsletter della Scuola Ri-creazione.</p>
+          <p>Alla fine del triennio, ho concluso la stesura del mio <span class="edu-highlight">primo romanzo</span> che adesso e' in mano a un agente letterario che ne sta valutando la pubblicazione.</p>
+        </div>
+      </div>
+      <div class="edu-visual">
+        <p class="edu-quote">Ho imparato a sentire il nucleo di una storia, distinguerne il ritmo, capire dove pulsa e dove invece si perde.</p>
+        <div style="margin-top:2rem; display:flex; align-items:center; gap:1rem;">
+          <div style="width:40px; height:2px; background:var(--blue-aa);"></div>
+          <span style="font-size:0.7rem; letter-spacing:0.2em; color:var(--blue-aa); text-transform:uppercase;">Torino, 2022-2025</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPETENZE -->
+  <section class="skills" id="skills">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Competenze</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <div class="skill-icon">&#9997;&#65039;</div>
+        <div class="skill-name">Scrittura Creativa</div>
+        <div class="skill-desc">Racconti, romanzi, testi per campagne. Ogni parola e' scelta con cura.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#128218;</div>
+        <div class="skill-name">Editing &amp; Bozze</div>
+        <div class="skill-desc">Correzione bozze, revisione stilistica, struttura narrativa.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#127758;</div>
+        <div class="skill-name">Mondo Editoriale</div>
+        <div class="skill-desc">Conoscenza approfondita del settore, agenti, case editrici, flussi di pubblicazione.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#9889;</div>
+        <div class="skill-name">Lettura Rapida</div>
+        <div class="skill-desc">Capacita' di leggere e analizzare testi con velocita' e precisione.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#128226;</div>
+        <div class="skill-name">Marketing Editoriale</div>
+        <div class="skill-desc">Comunicazione di prodotti editoriali, gestione community, contenuti social.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#127912;</div>
+        <div class="skill-name">Utilizzo di Canva</div>
+        <div class="skill-desc">Progettazione grafica per contenuti editoriali e social media.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#128256;</div>
+        <div class="skill-name">Multitasking</div>
+        <div class="skill-desc">Gestione di piu' progetti simultaneamente senza perdere qualita'.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#129513;</div>
+        <div class="skill-name">Problem Solving</div>
+        <div class="skill-desc">Approccio creativo e pragmatico alle sfide narrative e comunicative.</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon">&#128101;</div>
+        <div class="skill-name">Lavoro in Gruppo</div>
+        <div class="skill-desc">Collaborazione, ascolto, sintesi di visioni diverse in un'unica voce.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIZI -->
+  <section class="services" id="services">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Servizi</h2>
+    </div>
+    <p class="services-intro">
+      Lavoro con gli esordienti. Se nel cassetto hai una storia che vorresti inviare a un concorso o provare a mandare a una casa editrice, posso aiutarti a darle una forma, una struttura e una voce &mdash; trasformando le tue idee in un testo pronto per essere letto e valutato.
+    </p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-icon">&#128161;</div>
+        <h3 class="service-name">Consulenza Editoriale</h3>
+        <p class="service-desc">Brainstorming su un'idea di racconto o romanzo. Esploriamo insieme la tua storia, il suo potenziale, la direzione da prendere.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-icon">&#128203;</div>
+        <h3 class="service-name">Scheda di Valutazione</h3>
+        <p class="service-desc">Un'analisi dettagliata del tuo testo: punti di forza, fragilita' narrative, tono, ritmo e possibili sviluppi.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-icon">&#9986;&#65039;</div>
+        <h3 class="service-name">Editing Macro</h3>
+        <p class="service-desc">Intervento sulla struttura narrativa, l'architettura dei capitoli, la coerenza del mondo e dei personaggi. Micro editing su richiesta.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04</div>
+        <div class="service-icon">&#128269;</div>
+        <h3 class="service-name">Correzione Bozze</h3>
+        <p class="service-desc">Revisione accurata di refusi, errori grammaticali, punteggiatura e uniformita' stilistica. Il testo finale che merita.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGETTI -->
+  <section class="projects" id="projects">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Progetti</h2>
+    </div>
+    <div class="projects-list">
+
+      <div class="project-card">
+        <div>
+          <div class="project-num project-num-01">01</div>
+          <span class="project-year">2019 &mdash; 2022</span>
+        </div>
+        <div>
+          <div class="project-name">MagazINDIE</div>
+          <p class="project-desc">In un periodo di forte ascesa per la musica indipendente italiana, ho collaborato alla creazione della rivista MagazIndie. Abbiamo dato vita a una community di circa 10.000 persone. Per loro ho scritto numerosi articoli, condotto interviste, curato la rubrica "Uscite della settimana" e realizzato le grafiche.</p>
+          <div class="project-tags">
+            <span class="tag">Giornalismo musicale</span>
+            <span class="tag">Social media</span>
+            <span class="tag">Interviste</span>
+            <span class="tag">Community 10k</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div>
+          <div class="project-num project-num-02">02</div>
+          <span class="project-year">2023</span>
+        </div>
+        <div>
+          <div class="project-name">Podcast Tribu'</div>
+          <p class="project-desc">In collaborazione con Scuola Holden e Latte Creative, ho lavorato alla realizzazione del podcast Tribu', con le voci di Pierluca Mariti e Sofia Pasotto. Ho sperimentato la scrittura destinata alla lettura ad alta voce, recitata. L'episodio "Ares o Atena?" e' stato scritto direttamente da me e dalla mia classe.</p>
+          <div class="project-tags">
+            <span class="tag">Scrittura per audio</span>
+            <span class="tag">Scuola Holden</span>
+            <span class="tag">Latte Creative</span>
+            <span class="tag">Podcast</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div>
+          <div class="project-num project-num-03">03</div>
+          <span class="project-year">2024 &mdash; 2025</span>
+        </div>
+        <div>
+          <div class="project-name">Newsletter Ri-creazione</div>
+          <p class="project-desc">Per un anno ho curato insieme ad altri colleghi la newsletter della Scuola Holden, Ri-creazione. Il compito era quello di scrivere racconti brevi (max 900 battute) a tema libero o su commissione, con l'obiettivo di pubblicizzare i corsi singoli della Scuola.</p>
+          <div class="project-tags">
+            <span class="tag">Racconti brevi</span>
+            <span class="tag">Newsletter</span>
+            <span class="tag">Copywriting</span>
+            <span class="tag">Scuola Holden</span>
+          </div>
+          <div class="writing-card">
+            <div class="writing-card-title">Porta Palazzo Sud</div>
+            <p>Il 4 Limitato direzione Via Filadelfia doveva passare dieci minuti fa da Porta Palazzo Sud. Dalla fermata, che e' deserta, non si vedono arrivare neanche i suoi fanali ovali ma solo taxi e biciclette sfortunate. Di fronte, in piazza della Repubblica, un vecchio barbone barcolla, si lamenta con Dio, si inginocchia e mangia qualche scarto di mercato da terra&hellip;</p>
+            <div class="writing-card-sig">&mdash; Antonino Calabro'</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTATTI -->
+  <section class="contact" id="contact">
+    <p class="contact-intro">Diamo forma alla tua idea.</p>
+    <h2 class="contact-title">Iniziamo<br>una <em>storia</em></h2>
+    <div class="contact-links">
+      <a href="tel:+393497061004" class="contact-link">
+        <span>&#128222;</span> +39 349 706 1004
+      </a>
+      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
+        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller &nbsp;&middot;&nbsp; Torino, Italia
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let cx = 0, cy = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', function(e) {
+      cx = e.clientX; cy = e.clientY;
+      cursor.style.left = cx + 'px';
+      cursor.style.top = cy + 'px';
+    });
+
+    function animateRing() {
+      rx += (cx - rx) * 0.12;
+      ry += (cy - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(function(el) {
+      el.addEventListener('mouseenter', function() {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.opacity = '0';
+      });
+      el.addEventListener('mouseleave', function() {
+        cursor.style.width = '12px';
+        cursor.style.height = '12px';
+        ring.style.opacity = '0.5';
+      });
+    });
+
+    // Navbar scroll effect
+    var nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Active nav link highlighting based on scroll position
+    var sections = document.querySelectorAll('section[id]');
+    var navLinks = document.querySelectorAll('.nav-links a');
+
+    function setActiveLink() {
+      var scrollPos = window.scrollY + 100;
+      sections.forEach(function(section) {
+        var top = section.offsetTop;
+        var bottom = top + section.offsetHeight;
+        var id = section.getAttribute('id');
+        if (scrollPos >= top && scrollPos < bottom) {
+          navLinks.forEach(function(a) { a.classList.remove('active'); });
+          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink();
+  </script>
+</body>
+</html>
