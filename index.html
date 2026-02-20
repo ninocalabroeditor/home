@@ -692,4 +692,13 @@
         var id = section.getAttribute('id');
         if (scrollPos >= top && scrollPos < bottom) {
           allNavLinks.forEach(function(a) { a.classList.remove('active'); });
-          var act
+          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink();
+  </script>
+</body>
+</html>
