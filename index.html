@@ -66,9 +66,10 @@
     }
     nav.scrolled { border-bottom-color: rgba(74,127,165,0.15); }
     .nav-logo {
-      font-family: 'Caveat', cursive; font-size: 1.3rem;
-      color: var(--dark); text-decoration: none;
+      font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900;
+      color: var(--dark); text-decoration: none; letter-spacing: -0.01em;
     }
+    .nav-logo em { font-style: italic; color: var(--blue-aa); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       font-family: 'Courier Prime', monospace;
@@ -389,19 +390,85 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    @media (max-width: 900px) {
+    /* HAMBURGER - sempre presente nel DOM, nascosto su desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      z-index: 200;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--dark); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 1080px) {
+      /* NAV: hamburger sx, logo centro, niente links visibili */
+      nav {
+        display: grid;
+        grid-template-columns: 40px 1fr 40px;
+        align-items: center;
+        padding: 1.2rem 1.5rem;
+      }
+      .hamburger { display: flex; }
+      .nav-logo {
+        text-align: center;
+        font-size: 1.3rem;
+      }
+
+      /* Menu a tendina full-width */
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(245,240,232,0.98);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        gap: 0;
+        border-top: 2px solid var(--blue-aa);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        z-index: 99;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { border-bottom: 1px solid rgba(0,0,0,0.06); }
+      .nav-links a {
+        display: block;
+        padding: 1.1rem 2rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+      }
+      .nav-links a::after { display: none; }
+
+      /* LAYOUT */
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
+      .hero-left { padding: 10rem 2rem 4rem; }
       .about { grid-template-columns: 1fr; }
       .edu-content { grid-template-columns: 1fr; }
-      .skills-grid { grid-template-columns: 1fr 1fr; }
+
+      /* COMPETENZE: griglia fissa 3 colonne anche mobile ma più compatta */
+      .skills-grid { grid-template-columns: repeat(3, 1fr); }
+      .skill-item { padding: 1.5rem 1rem; }
+      .skill-name { font-size: 0.85rem; }
+      /* interlinea ridotta e body 1pt più piccolo */
+      .skill-desc { font-size: 0.72rem; line-height: 1.5; }
+
       .services-grid { grid-template-columns: 1fr; }
       .project-card { grid-template-columns: 1fr; gap: 1rem; }
       .project-num { font-size: 3rem; }
       section { padding: 5rem 2rem; }
-      nav { padding: 1.2rem 1.5rem; }
-      .nav-links { gap: 1rem; }
-      .nav-links a { font-size: 0.6rem; }
+    }
+
+    @media (max-width: 600px) {
+      /* Su schermi molto piccoli, 1 colonna per competenze */
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .skill-item:nth-child(2n) { border-right: none; }
+      .skill-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.15); }
     }
   </style>
 </head>
@@ -411,8 +478,11 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <a href="#" class="nav-logo">Nino Calabro'</a>
-    <ul class="nav-links">
+    <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#" class="nav-logo">Nino Cala<em>bro'</em></a>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#about">chi sono</a></li>
       <li><a href="#education">formazione</a></li>
       <li><a href="#skills">competenze</a></li>
@@ -652,8 +722,8 @@
       <a href="tel:+393497061004" class="contact-link">
         <span>&#128222;</span> +39 349 706 1004
       </a>
-      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
-        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
+      <a href="/cdn-cgi/l/email-protection#f899968c97969196979b9994999a8a97d6c8c1b89f95999194d69b9795" class="contact-link">
+        <span>&#9993;&#65039;</span> <span class="__cf_email__" data-cfemail="55343b213a3b3c3b3a3634393437273a7b656c153238343c397b363a38">[email&#160;protected]</span>
       </a>
     </div>
   </section>
@@ -662,7 +732,7 @@
     &copy; 2025 Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller &nbsp;&middot;&nbsp; Torino, Italia
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Custom cursor
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
@@ -696,7 +766,22 @@
       });
     });
 
-    // Navbar scroll effect
+    // Hamburger menu
+    var hamburger = document.getElementById('hamburger');
+    var navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', function() {
+      var isOpen = navLinks.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+    // Chiudi menu al click su un link
+    navLinks.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        navLinks.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
     var nav = document.getElementById('mainNav');
     window.addEventListener('scroll', function() {
       if (window.scrollY > 20) {
@@ -718,14 +803,4 @@
         var id = section.getAttribute('id');
         if (scrollPos >= top && scrollPos < bottom) {
           navLinks.forEach(function(a) { a.classList.remove('active'); });
-          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
-          if (activeLink) activeLink.classList.add('active');
-        }
-      });
-    }
-
-    window.addEventListener('scroll', setActiveLink);
-    setActiveLink();
-  </script>
-</body>
-</html>
+          var acti
