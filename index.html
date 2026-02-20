@@ -29,22 +29,20 @@
       overflow-x: hidden;
       cursor: none;
     }
-    body * { cursor: none; }
 
     .cursor {
       width: 12px; height: 12px;
       background: var(--blue); border-radius: 50%;
       position: fixed; pointer-events: none; z-index: 9999;
-      top: -50px; left: -50px;
-      will-change: transform;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+      mix-blend-mode: multiply;
     }
     .cursor-ring {
       width: 36px; height: 36px;
       border: 1.5px solid var(--blue); border-radius: 50%;
       position: fixed; pointer-events: none; z-index: 9998;
-      top: -50px; left: -50px;
-      opacity: 0.5;
-      will-change: transform;
+      transform: translate(-50%, -50%); opacity: 0.5;
     }
 
     body::before {
@@ -91,6 +89,7 @@
     .nav-links a.active { color: var(--blue-aa); }
     .nav-links a.active::after { width: 100%; }
 
+    /* Hamburger — nascosto su desktop */
     .hamburger {
       display: none;
       flex-direction: column; justify-content: center; align-items: center;
@@ -107,6 +106,7 @@
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+    /* ── SEZIONI ── */
     section { padding: 8rem 5rem; scroll-margin-top: 72px; }
 
     /* ── HERO ── */
@@ -167,6 +167,11 @@
       font-family: 'Caveat', cursive; font-size: 1.3rem;
       color: var(--cream); margin-top: 0.6rem;
     }
+    .hero-year {
+      position: absolute; bottom: 2.5rem; right: 4rem;
+      font-size: 0.7rem; letter-spacing: 0.3em; color: var(--blue-aa);
+      opacity: 0; animation: fadeUp 0.8s 1s forwards;
+    }
 
     /* ── SECTION HEADER ── */
     .section-header { display: flex; align-items: baseline; gap: 2rem; margin-bottom: 5rem; }
@@ -190,6 +195,20 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
+    }
+    .about-placeholder {
+      width: 100%; aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--dark) 100%);
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .about-role {
+      position: absolute; bottom: -1.2rem; left: 1rem;
+      background: var(--blue); color: var(--cream);
+      font-family: 'Caveat', cursive; font-size: 1.1rem; padding: 0.5rem 1.2rem;
+    }
+    .about-img-frame {
+      position: absolute; inset: 20px -20px -20px 20px;
+      border: 1.5px solid var(--blue); z-index: -1;
     }
     .about-label {
       font-size: 0.7rem; letter-spacing: 0.3em;
@@ -304,6 +323,7 @@
 
     /* ── MOBILE ── */
     @media (max-width: 1080px) {
+      /* Nav: griglia a 3 colonne, hamburger sx, logo centro */
       nav {
         display: grid;
         grid-template-columns: 40px 1fr 40px;
@@ -312,6 +332,8 @@
       }
       .hamburger { display: flex; }
       .nav-logo { text-align: center; font-size: 1.2rem; }
+
+      /* Menu a tendina */
       .nav-links {
         display: none;
         position: absolute;
@@ -326,24 +348,35 @@
       }
       .nav-links.open { display: flex; }
       .nav-links li { border-bottom: 1px solid rgba(0,0,0,0.06); }
-      .nav-links a { display: block; padding: 1.1rem 2rem; font-size: 0.8rem; letter-spacing: 0.2em; }
+      .nav-links a {
+        display: block;
+        padding: 1.1rem 2rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+      }
       .nav-links a::after { display: none; }
+
+      /* Layout */
       section { padding: 5rem 2rem; }
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
       .hero-left { padding: 9rem 2rem 4rem; }
       .about { grid-template-columns: 1fr; }
       .edu-content { grid-template-columns: 1fr; }
+
+      /* Competenze: 3 colonne compatte */
       .skills-grid { grid-template-columns: repeat(3, 1fr); }
       .skill-item { padding: 1.4rem 0.9rem; }
       .skill-name { font-size: 0.85rem; }
       .skill-desc { font-size: 0.72rem; line-height: 1.5; }
+
       .services-grid { grid-template-columns: 1fr; }
       .project-card { grid-template-columns: 1fr; gap: 0.5rem; }
       .project-num { font-size: 3rem; }
     }
 
     @media (max-width: 540px) {
+      /* Su telefoni piccoli: 2 colonne per competenze */
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .skill-item:nth-child(2n) { border-right: none; }
       .skill-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.15); }
@@ -359,7 +392,7 @@
     <button class="hamburger" id="hamburgerBtn" aria-label="Apri menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-    <a href="#" class="nav-logo">Nino Cala<em>brò</em></a>
+    <a href="#" class="nav-logo">Nino Cala<em>bro'</em></a>
     <ul class="nav-links" id="mobileMenu">
       <li><a href="#about">chi sono</a></li>
       <li><a href="#education">formazione</a></li>
@@ -373,7 +406,7 @@
   <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-left">
-      <h1 class="hero-title">Nino<br>Cala<em>brò</em></h1>
+      <h1 class="hero-title">Nino<br>Cala<em>bro'</em></h1>
       <p class="hero-subtitle">Racconto, scrivo e correggo storie.</p>
       <a href="#services" class="hero-cta">Scopri i servizi &rarr;</a>
     </div>
@@ -390,7 +423,7 @@
   <!-- CHI SONO -->
   <section class="about" id="about">
     <div class="about-img-block">
-      <img src="https://raw.githubusercontent.com/ninocalabroeditor/home/refs/heads/main/profile.jpg" alt="Foto di Nino Calabrò">
+      <img src="https://raw.githubusercontent.com/ninocalabroeditor/home/refs/heads/main/profile.jpg" alt="profile">
     </div>
     <div>
       <p class="about-label">Chi sono</p>
@@ -409,32 +442,22 @@
       <h2 class="section-title">Formazione</h2>
     </div>
     <div class="edu-content">
-
-      <!-- Colonna destra: riquadri -->
-      <div style="display:flex; flex-direction:column; gap:2rem; grid-column: 1 / -1;">
-
-        <!-- Riquadro Scuola Holden -->
-        <div class="edu-visual">
-          <div class="edu-school" style="font-size:2rem; margin-bottom:1rem;">Scuola Holden</div>
-          <p style="font-size:0.9rem; line-height:2; color:var(--ink); text-align:justify;">Alla Holden ho imparato a sentire il nucleo di una storia, distinguerne il ritmo, capire dove pulsa e dove invece si perde. Durante i tre anni ho scritto molti racconti, ho smontato e rimontato storie, collaborato alla scrittura della newsletter della Scuola Ri-creazione. Alla fine del triennio, ho concluso la stesura del mio <span class="edu-highlight">primo romanzo</span> che adesso è in mano a un agente letterario che ne sta valutando la pubblicazione.</p>
-          <div style="margin-top:2rem; display:flex; align-items:center; gap:1rem;">
-            <div style="width:40px; height:2px; background:var(--blue-aa);"></div>
-            <span style="font-size:0.7rem; letter-spacing:0.2em; color:var(--blue-aa); text-transform:uppercase;">Torino, 2022-2025</span>
-          </div>
+      <div>
+        <div class="edu-school">Scuola Holden</div>
+        <div class="edu-body">
+          <p>Il mio viaggio inizia nel 2022 quando ho deciso di attraversare l'Italia per arrivare a Torino, alla Scuola Holden, dove per tre anni ho studiato tecniche della narrazione.</p>
+          <p>Alla Holden ho imparato a sentire il nucleo di una storia, distinguerne il ritmo, capire dove pulsa e dove invece si perde.</p>
+          <p>Durante i tre anni ho scritto molti racconti, ho smontato e rimontato storie, collaborato alla scrittura della newsletter della Scuola Ri-creazione.</p>
+          <p>Alla fine del triennio, ho concluso la stesura del mio <span class="edu-highlight">primo romanzo</span> che adesso e' in mano a un agente letterario che ne sta valutando la pubblicazione.</p>
         </div>
-
-        <!-- Riquadro Lindau -->
-        <div class="edu-visual">
-          <div class="edu-school" style="font-size:2rem; margin-bottom:1rem;">Edizioni Lindau</div>
-          <p style="font-size:0.9rem; line-height:2; color:var(--ink); text-align:justify;">Ho frequentato il corso di formazione per redattori editoriali presso la casa editrice Lindau a Torino dove ho acquisito competenze specifiche nella correzione di bozze, nella revisione e normazione ortoeditoriale, nella parametrazione tipografica e nella revisione di traduzioni.</p>
-          <div style="margin-top:2rem; display:flex; align-items:center; gap:1rem;">
-            <div style="width:40px; height:2px; background:var(--blue-aa);"></div>
-            <span style="font-size:0.7rem; letter-spacing:0.2em; color:var(--blue-aa); text-transform:uppercase;">Torino, 2025-2026</span>
-          </div>
-        </div>
-
       </div>
-
+      <div class="edu-visual">
+        <p class="edu-quote">Ho imparato a sentire il nucleo di una storia, distinguerne il ritmo, capire dove pulsa e dove invece si perde.</p>
+        <div style="margin-top:2rem; display:flex; align-items:center; gap:1rem;">
+          <div style="width:40px; height:2px; background:var(--blue-aa);"></div>
+          <span style="font-size:0.7rem; letter-spacing:0.2em; color:var(--blue-aa); text-transform:uppercase;">Torino, 2022-2025</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -448,7 +471,7 @@
       <div class="skill-item">
         <div class="skill-icon">&#9997;&#65039;</div>
         <div class="skill-name">Scrittura Creativa</div>
-        <div class="skill-desc">Racconti, romanzi, testi per campagne. Ogni parola è scelta con cura.</div>
+        <div class="skill-desc">Racconti, romanzi, testi per campagne. Ogni parola e' scelta con cura.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#128218;</div>
@@ -463,7 +486,7 @@
       <div class="skill-item">
         <div class="skill-icon">&#9889;</div>
         <div class="skill-name">Lettura Rapida</div>
-        <div class="skill-desc">Capacità di leggere e analizzare testi con velocità e precisione.</div>
+        <div class="skill-desc">Capacita' di leggere e analizzare testi con velocita' e precisione.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#128226;</div>
@@ -478,7 +501,7 @@
       <div class="skill-item">
         <div class="skill-icon">&#128256;</div>
         <div class="skill-name">Multitasking</div>
-        <div class="skill-desc">Gestione di più progetti simultaneamente senza perdere qualità.</div>
+        <div class="skill-desc">Gestione di piu' progetti simultaneamente senza perdere qualita'.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#129513;</div>
@@ -513,7 +536,7 @@
         <div class="service-num">02</div>
         <div class="service-icon">&#128203;</div>
         <h3 class="service-name">Scheda di Valutazione</h3>
-        <p class="service-desc">Un'analisi dettagliata del tuo testo: punti di forza, fragilità narrative, tono, ritmo e possibili sviluppi.</p>
+        <p class="service-desc">Un'analisi dettagliata del tuo testo: punti di forza, fragilita' narrative, tono, ritmo e possibili sviluppi.</p>
       </div>
       <div class="service-card">
         <div class="service-num">03</div>
@@ -525,7 +548,7 @@
         <div class="service-num">04</div>
         <div class="service-icon">&#128269;</div>
         <h3 class="service-name">Correzione Bozze</h3>
-        <p class="service-desc">Revisione accurata di refusi, errori grammaticali, punteggiatura e uniformità stilistica. Il testo finale che merita.</p>
+        <p class="service-desc">Revisione accurata di refusi, errori grammaticali, punteggiatura e uniformita' stilistica. Il testo finale che merita.</p>
       </div>
     </div>
   </section>
@@ -561,8 +584,8 @@
           <span class="project-year">2023</span>
         </div>
         <div>
-          <div class="project-name">Podcast Tribù</div>
-          <p class="project-desc">In collaborazione con Scuola Holden e Latte Creative, ho lavorato alla realizzazione del podcast Tribù, con le voci di Pierluca Mariti e Sofia Pasotto. Ho sperimentato la scrittura destinata alla lettura ad alta voce, recitata. L'episodio "Ares o Atena?" è stato scritto direttamente da me e dalla mia classe.</p>
+          <div class="project-name">Podcast Tribu'</div>
+          <p class="project-desc">In collaborazione con Scuola Holden e Latte Creative, ho lavorato alla realizzazione del podcast Tribu', con le voci di Pierluca Mariti e Sofia Pasotto. Ho sperimentato la scrittura destinata alla lettura ad alta voce, recitata. L'episodio "Ares o Atena?" e' stato scritto direttamente da me e dalla mia classe.</p>
           <div class="project-tags">
             <span class="tag">Scrittura per audio</span>
             <span class="tag">Scuola Holden</span>
@@ -588,8 +611,8 @@
           </div>
           <div class="writing-card">
             <div class="writing-card-title">Porta Palazzo Sud</div>
-            <p>Il 4 Limitato direzione Via Filadelfia doveva passare dieci minuti fa da Porta Palazzo Sud. Dalla fermata, che è deserta, non si vedono arrivare neanche i suoi fanali ovali ma solo taxi e biciclette sfortunate. Di fronte, in piazza della Repubblica, un vecchio barbone barcolla, si lamenta con Dio, si inginocchia e mangia qualche scarto di mercato da terra&hellip;</p>
-            <div class="writing-card-sig">&mdash; Antonino Calabrò</div>
+            <p>Il 4 Limitato direzione Via Filadelfia doveva passare dieci minuti fa da Porta Palazzo Sud. Dalla fermata, che e' deserta, non si vedono arrivare neanche i suoi fanali ovali ma solo taxi e biciclette sfortunate. Di fronte, in piazza della Repubblica, un vecchio barbone barcolla, si lamenta con Dio, si inginocchia e mangia qualche scarto di mercato da terra&hellip;</p>
+            <div class="writing-card-sig">&mdash; Antonino Calabro'</div>
           </div>
         </div>
       </div>
@@ -602,36 +625,27 @@
     <p class="contact-intro">Diamo forma alla tua idea.</p>
     <h2 class="contact-title">Iniziamo<br>una <em>storia</em></h2>
     <div class="contact-links">
-      <a href="/cdn-cgi/l/email-protection#f2939c869d9c9b9c9d91939e9390809ddcc2cbb2959f939b9edc919d9f" class="contact-link">
-        <span>&#9993;&#65039;</span> <span class="__cf_email__" data-cfemail="43222d372c2d2a2d2c20222f2221312c6d737a03242e222a2f6d202c2e">[email&#160;protected]</span>
+      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
+        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
       </a>
     </div>
   </section>
 
   <footer>
-    &copy; Nino Calabrò &nbsp;&middot;&nbsp; Editor &amp; Storyteller
+    &copy; Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // ── Cursor ──
     var cursor = document.getElementById('cursor');
     var ring = document.getElementById('cursorRing');
-    var cx = -50, cy = -50, rx = -50, ry = -50;
+    var cx = 0, cy = 0, rx = 0, ry = 0;
 
     document.addEventListener('mousemove', function(e) {
-      cx = e.clientX;
-      cy = e.clientY;
-      cursor.style.transform = 'translate(' + (cx - 6) + 'px, ' + (cy - 6) + 'px)';
+      cx = e.clientX; cy = e.clientY;
+      cursor.style.left = cx + 'px';
+      cursor.style.top = cy + 'px';
     });
-
-    function animateRing() {
-      rx += (cx - rx) * 0.12;
-      ry += (cy - ry) * 0.12;
-      ring.style.transform = 'translate(' + (rx - 18) + 'px, ' + (ry - 18) + 'px)';
-      requestAnimationFrame(animateRing);
-    }
-    animateRing();
-
     function animateRing() {
       rx += (cx - rx) * 0.12;
       ry += (cy - ry) * 0.12;
@@ -640,18 +654,9 @@
       requestAnimationFrame(animateRing);
     }
     animateRing();
-
     document.querySelectorAll('a, button').forEach(function(el) {
-      el.addEventListener('mouseenter', function() {
-        cursor.style.width = '20px';
-        cursor.style.height = '20px';
-        ring.style.opacity = '0';
-      });
-      el.addEventListener('mouseleave', function() {
-        cursor.style.width = '12px';
-        cursor.style.height = '12px';
-        ring.style.opacity = '0.5';
-      });
+      el.addEventListener('mouseenter', function() { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.opacity = '0'; });
+      el.addEventListener('mouseleave', function() { cursor.style.width = '12px'; cursor.style.height = '12px'; ring.style.opacity = '0.5'; });
     });
 
     // ── Hamburger ──
@@ -689,4 +694,13 @@
         var id = section.getAttribute('id');
         if (scrollPos >= top && scrollPos < bottom) {
           allNavLinks.forEach(function(a) { a.classList.remove('active'); });
-          var act
+          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink();
+  </script>
+</body>
+</html>
