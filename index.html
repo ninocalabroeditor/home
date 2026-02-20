@@ -12,14 +12,12 @@
     :root {
       --cream: #F5F0E8;
       --blue: #4A7FA5;
-      --blue-dark: #2B5F80;      /* blu scuro per testo su sfondi chiari: ~7.2:1 su cream */
-      --blue-aa: #1E4D6B;        /* blu ancora più scuro per AAA su cream/sand/white */
+      --blue-dark: #2B5F80;
+      --blue-aa: #1E4D6B;
       --dark: #1A1A2E;
-      --ink: #1C1C1C;            /* leggermente più scuro: ~15:1 su cream */
+      --ink: #1C1C1C;
       --sand: #E8DFC8;
       --light-blue: #D4E5F0;
-      --cream-strong: #F5F0E8;
-      --white: #FFFFFF;
     }
 
     html { scroll-behavior: smooth; }
@@ -54,7 +52,7 @@
       pointer-events: none; z-index: 9997; opacity: 0.6;
     }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
@@ -64,12 +62,14 @@
       border-bottom: 1px solid transparent;
       transition: border-color 0.3s;
     }
-    nav.scrolled { border-bottom-color: rgba(74,127,165,0.15); }
+    nav.scrolled { border-bottom-color: rgba(74,127,165,0.2); }
+
     .nav-logo {
       font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900;
       color: var(--dark); text-decoration: none; letter-spacing: -0.01em;
     }
     .nav-logo em { font-style: italic; color: var(--blue-aa); }
+
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       font-family: 'Courier Prime', monospace;
@@ -89,13 +89,27 @@
     .nav-links a.active { color: var(--blue-aa); }
     .nav-links a.active::after { width: 100%; }
 
-    /* SEZIONI - scroll-margin-top per compensare la navbar fissa */
-    section {
-      padding: 8rem 5rem;
-      scroll-margin-top: 72px;
+    /* Hamburger — nascosto su desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      flex-shrink: 0;
     }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--dark); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* HERO */
+    /* ── SEZIONI ── */
+    section { padding: 8rem 5rem; scroll-margin-top: 72px; }
+
+    /* ── HERO ── */
     .hero {
       min-height: 100vh;
       display: grid; grid-template-columns: 1fr 1fr;
@@ -152,7 +166,6 @@
     .hero-oval-sub {
       font-family: 'Caveat', cursive; font-size: 1.3rem;
       color: var(--cream); margin-top: 0.6rem;
-      /* no opacity - cream on blue-dark bg already passes AAA at large size */
     }
     .hero-year {
       position: absolute; bottom: 2.5rem; right: 4rem;
@@ -160,9 +173,8 @@
       opacity: 0; animation: fadeUp 0.8s 1s forwards;
     }
 
-    .section-header {
-      display: flex; align-items: baseline; gap: 2rem; margin-bottom: 5rem;
-    }
+    /* ── SECTION HEADER ── */
+    .section-header { display: flex; align-items: baseline; gap: 2rem; margin-bottom: 5rem; }
     .section-num {
       font-family: 'Playfair Display', serif;
       font-size: 5rem; font-weight: 900; color: var(--light-blue); line-height: 1;
@@ -172,7 +184,7 @@
       font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 700; color: var(--dark);
     }
 
-    /* CHI SONO */
+    /* ── CHI SONO ── */
     .about {
       background: var(--sand);
       display: grid; grid-template-columns: 1fr 1.4fr;
@@ -205,48 +217,28 @@
     .about-body { font-size: 0.9rem; line-height: 2; color: var(--ink); }
     .about-body p + p { margin-top: 1.2rem; }
 
-    /* FORMAZIONE */
+    /* ── FORMAZIONE ── */
     .education { background: var(--cream); }
-    .edu-content {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
-    }
-    .edu-school {
-      font-family: 'Caveat', cursive; font-size: 2.5rem;
-      color: var(--blue-aa); margin-bottom: 1.5rem;
-    }
+    .edu-content { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .edu-school { font-family: 'Caveat', cursive; font-size: 2.5rem; color: var(--blue-aa); margin-bottom: 1.5rem; }
     .edu-body { font-size: 0.9rem; line-height: 2; color: var(--ink); }
     .edu-body p + p { margin-top: 1rem; }
-    .edu-highlight {
-      background: linear-gradient(180deg, transparent 55%, #B8D4E8 55%);
-      font-weight: 700;
-    }
-    .edu-visual {
-      position: relative; border: 2px solid var(--blue-aa);
-      padding: 2.5rem; background: white;
-    }
+    .edu-highlight { background: linear-gradient(180deg, transparent 55%, #B8D4E8 55%); font-weight: 700; }
+    .edu-visual { position: relative; border: 2px solid var(--blue-aa); padding: 2.5rem; background: white; }
     .edu-visual::before {
       content: 'SCUOLA HOLDEN · TORINO · 2022-2025';
       position: absolute; top: -0.6rem; left: 1rem;
       background: white; font-size: 0.6rem;
       letter-spacing: 0.2em; color: var(--blue-aa); padding: 0 0.5rem;
     }
-    .edu-quote {
-      font-family: 'Playfair Display', serif; font-style: italic;
-      font-size: 1.3rem; line-height: 1.7; color: var(--dark);
-    }
-    .edu-quote::before {
-      content: '"'; color: var(--blue-aa); font-size: 3rem;
-      line-height: 0; vertical-align: -0.6rem; margin-right: 0.2rem;
-    }
+    .edu-quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; line-height: 1.7; color: var(--dark); }
+    .edu-quote::before { content: '"'; color: var(--blue-aa); font-size: 3rem; line-height: 0; vertical-align: -0.6rem; margin-right: 0.2rem; }
 
-    /* COMPETENZE */
+    /* ── COMPETENZE ── */
     .skills { background: var(--dark); color: var(--cream); }
     .skills .section-title { color: var(--cream); }
     .skills .section-num { color: #5B9DBF; }
-    .skills-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      border: 1px solid rgba(255,255,255,0.15); margin-top: 4rem;
-    }
+    .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid rgba(255,255,255,0.15); margin-top: 4rem; }
     .skill-item {
       padding: 2.5rem 2rem;
       border-right: 1px solid rgba(255,255,255,0.15);
@@ -256,43 +248,28 @@
     .skill-item:hover { background: rgba(74,127,165,0.2); }
     .skill-item:nth-child(3n) { border-right: none; }
     .skill-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-    .skill-name {
-      font-family: 'Playfair Display', serif; font-size: 1.1rem;
-      font-weight: 700; color: var(--cream); margin-bottom: 0.5rem;
-    }
-    /* era rgba(245,240,232,0.5) su #1A1A2E → ~4.1:1 ❌. Ora pieno: ~12:1 ✅ */
+    .skill-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); margin-bottom: 0.5rem; }
     .skill-desc { font-size: 0.82rem; line-height: 1.7; color: #C8C0B0; }
 
-    /* SERVIZI */
+    /* ── SERVIZI ── */
     .services { background: var(--sand); }
-    .services .section-num { color: #8CAFC8; }  /* stesso colore del 04 Progetti header */
+    .services .section-num { color: #8CAFC8; }
     .services-intro {
       font-size: 0.95rem; line-height: 2; max-width: 700px;
       margin-bottom: 4rem; border-left: 4px solid var(--blue-aa);
       padding-left: 1.5rem; font-style: italic; color: var(--ink);
     }
-    .services-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 3px; background: var(--blue-aa);
-    }
-    .service-card {
-      background: var(--sand); padding: 3rem 2.5rem; transition: background 0.3s;
-    }
+    .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: var(--blue-aa); }
+    .service-card { background: var(--sand); padding: 3rem 2.5rem; transition: background 0.3s; }
     .service-card:hover { background: var(--cream); }
-    .service-num {
-      font-family: 'Playfair Display', serif; font-size: 3rem;
-      font-weight: 900; color: var(--blue-aa); line-height: 1; margin-bottom: 0.5rem;
-    }
+    .service-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--blue-aa); line-height: 1; margin-bottom: 0.5rem; }
     .service-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-    .service-name {
-      font-family: 'Playfair Display', serif; font-size: 1.3rem;
-      font-weight: 700; color: var(--dark); margin-bottom: 1rem;
-    }
+    .service-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--dark); margin-bottom: 1rem; }
     .service-desc { font-size: 0.85rem; line-height: 1.9; color: var(--ink); }
 
-    /* PROGETTI */
+    /* ── PROGETTI ── */
     .projects { background: var(--cream); }
-    .projects .section-num { color: #8CAFC8; }  /* scuro come il 01 MagazINDIE era */
+    .projects .section-num { color: #8CAFC8; }
     .projects-list { display: flex; flex-direction: column; }
     .project-card {
       display: grid; grid-template-columns: 200px 1fr;
@@ -300,43 +277,20 @@
       border-top: 1px solid rgba(0,0,0,0.15); transition: transform 0.4s;
     }
     .project-card:hover { transform: translateX(10px); }
-    .project-num {
-      font-family: 'Playfair Display', serif; font-size: 5rem;
-      font-weight: 900; line-height: 1;
-    }
+    .project-num { font-family: 'Playfair Display', serif; font-size: 5rem; font-weight: 900; line-height: 1; }
     .project-num-01 { color: #D4E5F0; }
     .project-num-02 { color: #D4E5F0; }
     .project-num-03 { color: #D4E5F0; }
-    .project-year {
-      font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 700;
-      color: var(--blue-aa); display: block; margin-top: -0.5rem;
-    }
-    .project-name {
-      font-family: 'Caveat', cursive; font-size: 2.2rem;
-      color: var(--blue-aa); margin-bottom: 1rem;
-    }
+    .project-year { font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 700; color: var(--blue-aa); display: block; margin-top: -0.5rem; }
+    .project-name { font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--blue-aa); margin-bottom: 1rem; }
     .project-desc { font-size: 0.9rem; line-height: 2; color: var(--ink); max-width: 620px; }
     .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-    .tag {
-      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-      border: 2px solid var(--blue-aa); color: var(--blue-aa); padding: 0.3rem 0.8rem;
-      font-weight: 700;
-    }
-    .writing-card {
-      background: white; border-left: 4px solid var(--blue-aa);
-      padding: 1.5rem 2rem; margin-top: 2rem;
-      font-size: 0.82rem; line-height: 1.9; max-width: 520px; color: var(--ink);
-    }
-    .writing-card-title {
-      font-family: 'Playfair Display', serif; font-size: 1rem;
-      font-weight: 700; margin-bottom: 0.8rem; color: var(--dark);
-    }
-    /* era var(--blue) su white → ~3.6:1 ❌. Ora blue-aa → ~7.3:1 ✅ */
-    .writing-card-sig {
-      font-style: italic; color: var(--blue-aa); margin-top: 1rem; font-size: 0.8rem; font-weight: 700;
-    }
+    .tag { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; border: 2px solid var(--blue-aa); color: var(--blue-aa); padding: 0.3rem 0.8rem; font-weight: 700; }
+    .writing-card { background: white; border-left: 4px solid var(--blue-aa); padding: 1.5rem 2rem; margin-top: 2rem; font-size: 0.82rem; line-height: 1.9; max-width: 520px; color: var(--ink); }
+    .writing-card-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--dark); }
+    .writing-card-sig { font-style: italic; color: var(--blue-aa); margin-top: 1rem; font-size: 0.8rem; font-weight: 700; }
 
-    /* CONTATTI */
+    /* ── CONTATTI ── */
     .contact {
       background: var(--dark); color: var(--cream);
       text-align: center; padding: 10rem 5rem;
@@ -348,80 +302,33 @@
       color: rgba(255,255,255,0.04); left: 50%; top: 50%;
       transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none;
     }
-    /* era opacity 0.7 su sfondo blue → rischio contrasto. Su dark è ok */
-    .contact-intro {
-      font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
-      margin-bottom: 2rem; color: #A8C4D8; position: relative;
-    }
-    .contact-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 900;
-      line-height: 1.1; margin-bottom: 4rem; position: relative;
-      color: var(--cream);
-    }
-    /* era opacity 0.7 → inaccessibile. Ora colore esplicito chiaro su dark */
+    .contact-intro { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 2rem; color: #A8C4D8; position: relative; }
+    .contact-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 900; line-height: 1.1; margin-bottom: 4rem; position: relative; color: var(--cream); }
     .contact-title em { font-style: italic; color: #A8C4D8; }
-    .contact-links {
-      display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
-      position: relative;
-    }
-    .contact-link {
-      font-family: 'Courier Prime', monospace; font-size: 1.1rem;
-      color: var(--cream); text-decoration: none;
-      display: flex; align-items: center; gap: 1rem;
-      /* era rgba(0.3) → ~1.8:1 ❌. Ora colore solido */
-      border-bottom: 1px solid #8CAFC8; padding-bottom: 0.4rem;
-      transition: gap 0.3s, border-color 0.3s;
-    }
+    .contact-links { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; position: relative; }
+    .contact-link { font-family: 'Courier Prime', monospace; font-size: 1.1rem; color: var(--cream); text-decoration: none; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #8CAFC8; padding-bottom: 0.4rem; transition: gap 0.3s, border-color 0.3s; }
     .contact-link:hover { gap: 1.5rem; border-color: var(--cream); }
 
-    footer {
-      background: var(--dark); color: #8A8A9A;
-      text-align: center; padding: 2rem;
-      font-size: 0.7rem; letter-spacing: 0.15em;
-    }
+    /* ── FOOTER ── */
+    footer { background: var(--dark); color: #8A8A9A; text-align: center; padding: 2rem; font-size: 0.7rem; letter-spacing: 0.15em; }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-    /* HAMBURGER - sempre presente nel DOM, nascosto su desktop */
-    .hamburger {
-      display: none;
-      flex-direction: column; justify-content: center; align-items: center;
-      gap: 5px; width: 40px; height: 40px;
-      background: none; border: none; cursor: pointer; padding: 4px;
-      z-index: 200;
-    }
-    .hamburger span {
-      display: block; width: 22px; height: 2px;
-      background: var(--dark); border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
+    /* ── MOBILE ── */
     @media (max-width: 1080px) {
-      /* NAV: hamburger sx, logo centro, niente links visibili */
+      /* Nav: griglia a 3 colonne, hamburger sx, logo centro */
       nav {
         display: grid;
         grid-template-columns: 40px 1fr 40px;
         align-items: center;
-        padding: 1.2rem 1.5rem;
+        padding: 1.1rem 1.5rem;
       }
       .hamburger { display: flex; }
-      .nav-logo {
-        text-align: center;
-        font-size: 1.3rem;
-      }
+      .nav-logo { text-align: center; font-size: 1.2rem; }
 
-      /* Menu a tendina full-width */
+      /* Menu a tendina */
       .nav-links {
         display: none;
         position: absolute;
@@ -431,7 +338,7 @@
         flex-direction: column;
         gap: 0;
         border-top: 2px solid var(--blue-aa);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         z-index: 99;
       }
       .nav-links.open { display: flex; }
@@ -439,33 +346,32 @@
       .nav-links a {
         display: block;
         padding: 1.1rem 2rem;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         letter-spacing: 0.2em;
       }
       .nav-links a::after { display: none; }
 
-      /* LAYOUT */
+      /* Layout */
+      section { padding: 5rem 2rem; }
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
-      .hero-left { padding: 10rem 2rem 4rem; }
+      .hero-left { padding: 9rem 2rem 4rem; }
       .about { grid-template-columns: 1fr; }
       .edu-content { grid-template-columns: 1fr; }
 
-      /* COMPETENZE: griglia fissa 3 colonne anche mobile ma più compatta */
+      /* Competenze: 3 colonne compatte */
       .skills-grid { grid-template-columns: repeat(3, 1fr); }
-      .skill-item { padding: 1.5rem 1rem; }
+      .skill-item { padding: 1.4rem 0.9rem; }
       .skill-name { font-size: 0.85rem; }
-      /* interlinea ridotta e body 1pt più piccolo */
       .skill-desc { font-size: 0.72rem; line-height: 1.5; }
 
       .services-grid { grid-template-columns: 1fr; }
-      .project-card { grid-template-columns: 1fr; gap: 1rem; }
+      .project-card { grid-template-columns: 1fr; gap: 0.5rem; }
       .project-num { font-size: 3rem; }
-      section { padding: 5rem 2rem; }
     }
 
-    @media (max-width: 600px) {
-      /* Su schermi molto piccoli, 1 colonna per competenze */
+    @media (max-width: 540px) {
+      /* Su telefoni piccoli: 2 colonne per competenze */
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .skill-item:nth-child(2n) { border-right: none; }
       .skill-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.15); }
@@ -478,11 +384,11 @@
   <div class="cursor-ring" id="cursorRing"></div>
 
   <nav id="mainNav">
-    <button class="hamburger" id="hamburger" aria-label="Apri menu" aria-expanded="false">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Apri menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
     <a href="#" class="nav-logo">Nino Cala<em>bro'</em></a>
-    <ul class="nav-links" id="navLinks">
+    <ul class="nav-links" id="mobileMenu">
       <li><a href="#about">chi sono</a></li>
       <li><a href="#education">formazione</a></li>
       <li><a href="#skills">competenze</a></li>
@@ -575,7 +481,7 @@
       <div class="skill-item">
         <div class="skill-icon">&#127758;</div>
         <div class="skill-name">Mondo Editoriale</div>
-        <div class="skill-desc">Conoscenza approfondita del settore, agenti, case editrici, flussi di pubblicazione.</div>
+        <div class="skill-desc">Conoscenza approfondita del settore, agenti, case editrici.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#9889;</div>
@@ -585,12 +491,12 @@
       <div class="skill-item">
         <div class="skill-icon">&#128226;</div>
         <div class="skill-name">Marketing Editoriale</div>
-        <div class="skill-desc">Comunicazione di prodotti editoriali, gestione community, contenuti social.</div>
+        <div class="skill-desc">Comunicazione di prodotti editoriali, gestione community.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#127912;</div>
         <div class="skill-name">Utilizzo di Canva</div>
-        <div class="skill-desc">Progettazione grafica per contenuti editoriali e social media.</div>
+        <div class="skill-desc">Progettazione grafica per contenuti editoriali e social.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#128256;</div>
@@ -600,12 +506,12 @@
       <div class="skill-item">
         <div class="skill-icon">&#129513;</div>
         <div class="skill-name">Problem Solving</div>
-        <div class="skill-desc">Approccio creativo e pragmatico alle sfide narrative e comunicative.</div>
+        <div class="skill-desc">Approccio creativo e pragmatico alle sfide narrative.</div>
       </div>
       <div class="skill-item">
         <div class="skill-icon">&#128101;</div>
         <div class="skill-name">Lavoro in Gruppo</div>
-        <div class="skill-desc">Collaborazione, ascolto, sintesi di visioni diverse in un'unica voce.</div>
+        <div class="skill-desc">Collaborazione, ascolto, sintesi di visioni diverse.</div>
       </div>
     </div>
   </section>
@@ -722,8 +628,8 @@
       <a href="tel:+393497061004" class="contact-link">
         <span>&#128222;</span> +39 349 706 1004
       </a>
-      <a href="/cdn-cgi/l/email-protection#f899968c97969196979b9994999a8a97d6c8c1b89f95999194d69b9795" class="contact-link">
-        <span>&#9993;&#65039;</span> <span class="__cf_email__" data-cfemail="55343b213a3b3c3b3a3634393437273a7b656c153238343c397b363a38">[email&#160;protected]</span>
+      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
+        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
       </a>
     </div>
   </section>
@@ -732,18 +638,17 @@
     &copy; 2025 Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller &nbsp;&middot;&nbsp; Torino, Italia
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let cx = 0, cy = 0, rx = 0, ry = 0;
+  <script>
+    // ── Cursor ──
+    var cursor = document.getElementById('cursor');
+    var ring = document.getElementById('cursorRing');
+    var cx = 0, cy = 0, rx = 0, ry = 0;
 
     document.addEventListener('mousemove', function(e) {
       cx = e.clientX; cy = e.clientY;
       cursor.style.left = cx + 'px';
       cursor.style.top = cy + 'px';
     });
-
     function animateRing() {
       rx += (cx - rx) * 0.12;
       ry += (cy - ry) * 0.12;
@@ -752,55 +657,53 @@
       requestAnimationFrame(animateRing);
     }
     animateRing();
-
     document.querySelectorAll('a, button').forEach(function(el) {
-      el.addEventListener('mouseenter', function() {
-        cursor.style.width = '20px';
-        cursor.style.height = '20px';
-        ring.style.opacity = '0';
-      });
-      el.addEventListener('mouseleave', function() {
-        cursor.style.width = '12px';
-        cursor.style.height = '12px';
-        ring.style.opacity = '0.5';
-      });
+      el.addEventListener('mouseenter', function() { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.opacity = '0'; });
+      el.addEventListener('mouseleave', function() { cursor.style.width = '12px'; cursor.style.height = '12px'; ring.style.opacity = '0.5'; });
     });
 
-    // Hamburger menu
-    var hamburger = document.getElementById('hamburger');
-    var navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', function() {
-      var isOpen = navLinks.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      hamburger.setAttribute('aria-expanded', isOpen);
+    // ── Hamburger ──
+    var hamburgerBtn = document.getElementById('hamburgerBtn');
+    var mobileMenu = document.getElementById('mobileMenu');
+
+    hamburgerBtn.addEventListener('click', function() {
+      var isOpen = mobileMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('open', isOpen);
+      hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
     });
-    // Chiudi menu al click su un link
-    navLinks.querySelectorAll('a').forEach(function(a) {
+    mobileMenu.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() {
-        navLinks.classList.remove('open');
-        hamburger.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
+        hamburgerBtn.classList.remove('open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
       });
     });
-    var nav = document.getElementById('mainNav');
+
+    // ── Navbar scroll ──
+    var mainNav = document.getElementById('mainNav');
     window.addEventListener('scroll', function() {
-      if (window.scrollY > 20) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
+      mainNav.classList.toggle('scrolled', window.scrollY > 20);
     });
 
-    // Active nav link highlighting based on scroll position
-    var sections = document.querySelectorAll('section[id]');
-    var navLinks = document.querySelectorAll('.nav-links a');
+    // ── Active nav link ──
+    var allSections = document.querySelectorAll('section[id]');
+    var allNavLinks = document.querySelectorAll('.nav-links a');
 
     function setActiveLink() {
       var scrollPos = window.scrollY + 100;
-      sections.forEach(function(section) {
+      allSections.forEach(function(section) {
         var top = section.offsetTop;
         var bottom = top + section.offsetHeight;
         var id = section.getAttribute('id');
         if (scrollPos >= top && scrollPos < bottom) {
-          navLinks.forEach(function(a) { a.classList.remove('active'); });
-          var acti
+          allNavLinks.forEach(function(a) { a.classList.remove('active'); });
+          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
+          if (activeLink) activeLink.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink();
+  </script>
+</body>
+</html>
