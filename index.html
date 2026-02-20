@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nino Calabro - Editor e Storyteller</title>
+  <title>Nino Calabrò - Editor e Storyteller</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -318,7 +318,6 @@
 
     /* ── MOBILE ── */
     @media (max-width: 1080px) {
-      /* Nav: griglia a 3 colonne, hamburger sx, logo centro */
       nav {
         display: grid;
         grid-template-columns: 40px 1fr 40px;
@@ -328,7 +327,6 @@
       .hamburger { display: flex; }
       .nav-logo { text-align: center; font-size: 1.2rem; }
 
-      /* Menu a tendina */
       .nav-links {
         display: none;
         position: absolute;
@@ -351,7 +349,6 @@
       }
       .nav-links a::after { display: none; }
 
-      /* Layout */
       section { padding: 5rem 2rem; }
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
@@ -359,7 +356,6 @@
       .about { grid-template-columns: 1fr; }
       .edu-content { grid-template-columns: 1fr; }
 
-      /* Competenze: 3 colonne compatte */
       .skills-grid { grid-template-columns: repeat(3, 1fr); }
       .skill-item { padding: 1.4rem 0.9rem; }
       .skill-name { font-size: 0.85rem; }
@@ -371,7 +367,6 @@
     }
 
     @media (max-width: 540px) {
-      /* Su telefoni piccoli: 2 colonne per competenze */
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .skill-item:nth-child(2n) { border-right: none; }
       .skill-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.15); }
@@ -628,8 +623,8 @@
       <a href="tel:+393497061004" class="contact-link">
         <span>&#128222;</span> +39 349 706 1004
       </a>
-      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
-        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
+      <a href="/cdn-cgi/l/email-protection#ee8f809a81808780818d8f828f8c9c81c0ded7ae89838f8782c08d8183" class="contact-link">
+        <span>&#9993;&#65039;</span> <span class="__cf_email__" data-cfemail="90f1fee4fffef9fefff3f1fcf1f2e2ffbea0a9d0f7fdf1f9fcbef3fffd">[email&#160;protected]</span>
       </a>
     </div>
   </section>
@@ -638,7 +633,7 @@
     &copy; 2025 Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller &nbsp;&middot;&nbsp; Torino, Italia
   </footer>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // ── Cursor ──
     var cursor = document.getElementById('cursor');
     var ring = document.getElementById('cursorRing');
@@ -697,13 +692,4 @@
         var id = section.getAttribute('id');
         if (scrollPos >= top && scrollPos < bottom) {
           allNavLinks.forEach(function(a) { a.classList.remove('active'); });
-          var activeLink = document.querySelector('.nav-links a[href="#' + id + '"]');
-          if (activeLink) activeLink.classList.add('active');
-        }
-      });
-    }
-    window.addEventListener('scroll', setActiveLink);
-    setActiveLink();
-  </script>
-</body>
-</html>
+          var act
