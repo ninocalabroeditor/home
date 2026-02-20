@@ -318,6 +318,7 @@
 
     /* ── MOBILE ── */
     @media (max-width: 1080px) {
+      /* Nav: griglia a 3 colonne, hamburger sx, logo centro */
       nav {
         display: grid;
         grid-template-columns: 40px 1fr 40px;
@@ -327,6 +328,7 @@
       .hamburger { display: flex; }
       .nav-logo { text-align: center; font-size: 1.2rem; }
 
+      /* Menu a tendina */
       .nav-links {
         display: none;
         position: absolute;
@@ -349,6 +351,7 @@
       }
       .nav-links a::after { display: none; }
 
+      /* Layout */
       section { padding: 5rem 2rem; }
       .hero { grid-template-columns: 1fr; }
       .hero-right { display: none; }
@@ -356,6 +359,7 @@
       .about { grid-template-columns: 1fr; }
       .edu-content { grid-template-columns: 1fr; }
 
+      /* Competenze: 3 colonne compatte */
       .skills-grid { grid-template-columns: repeat(3, 1fr); }
       .skill-item { padding: 1.4rem 0.9rem; }
       .skill-name { font-size: 0.85rem; }
@@ -367,6 +371,7 @@
     }
 
     @media (max-width: 540px) {
+      /* Su telefoni piccoli: 2 colonne per competenze */
       .skills-grid { grid-template-columns: 1fr 1fr; }
       .skill-item:nth-child(2n) { border-right: none; }
       .skill-item:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.15); }
@@ -407,18 +412,13 @@
           <div class="hero-oval-sub">&mdash; storyteller &mdash;</div>
         </div>
       </div>
-      <span class="hero-year">2025</span>
     </div>
   </section>
 
   <!-- CHI SONO -->
   <section class="about" id="about">
     <div class="about-img-block">
-      <div class="about-placeholder">
-        <span style="font-size:5rem; opacity:0.2;">&#127797;</span>
-        <div class="about-role">editor &middot; storyteller</div>
-        <div class="about-img-frame"></div>
-      </div>
+      <img src="profile.jpg" alt="profile">
     </div>
     <div>
       <p class="about-label">Chi sono</p>
@@ -623,17 +623,17 @@
       <a href="tel:+393497061004" class="contact-link">
         <span>&#128222;</span> +39 349 706 1004
       </a>
-      <a href="/cdn-cgi/l/email-protection#ee8f809a81808780818d8f828f8c9c81c0ded7ae89838f8782c08d8183" class="contact-link">
-        <span>&#9993;&#65039;</span> <span class="__cf_email__" data-cfemail="90f1fee4fffef9fefff3f1fcf1f2e2ffbea0a9d0f7fdf1f9fcbef3fffd">[email&#160;protected]</span>
+      <a href="mailto:antoninocalabro.09@gmail.com" class="contact-link">
+        <span>&#9993;&#65039;</span> antoninocalabro.09@gmail.com
       </a>
     </div>
   </section>
 
   <footer>
-    &copy; 2025 Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller &nbsp;&middot;&nbsp; Torino, Italia
+    &copy; Nino Calabro' &nbsp;&middot;&nbsp; Editor &amp; Storyteller
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     // ── Cursor ──
     var cursor = document.getElementById('cursor');
     var ring = document.getElementById('cursorRing');
