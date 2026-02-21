@@ -111,12 +111,18 @@
     section { padding: 8rem 5rem; scroll-margin-top: 72px; }
 
     /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: grid; grid-template-columns: 1fr 1fr;
-      position: relative; overflow: hidden;
-      scroll-margin-top: 0;
-    }
+ .hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  scroll-margin-top: 0;
+  text-align: center;
+}
+.hero-left {
+  padding: 4rem 2rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
     .hero-left {
       padding: 12rem 4rem 4rem 5rem;
       display: flex; flex-direction: column; justify-content: center;
@@ -402,19 +408,13 @@
   </nav>
 
   <!-- HERO -->
+ <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-left">
       <h1 class="hero-title">Nino<br>Cala<em>brò</em></h1>
+      <p class="hero-subtitle" style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--blue-aa); margin-top:1.5rem;">Editor &amp; Storyteller</p>
       <p class="hero-subtitle">Racconto, scrivo e correggo storie.</p>
       <a href="#services" class="hero-cta">Scopri i servizi &rarr;</a>
-    </div>
-    <div class="hero-right">
-      <div class="hero-oval">
-        <div class="hero-oval-inner">
-          <div class="hero-oval-text">EDITOR</div>
-          <div class="hero-oval-sub">&mdash; storyteller &mdash;</div>
-        </div>
-      </div>
     </div>
   </section>
 
