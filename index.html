@@ -342,6 +342,58 @@
     }
     .percorso-answer strong { color: var(--cream); }
     /* ── FOOTER ── */
+        /* ── SERVICE BUTTON ── */
+    .service-btn {
+      margin-top: 1.5rem;
+      background: none;
+      border: 2px solid var(--blue-aa);
+      color: var(--blue-aa);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+    .service-btn:hover { background: var(--blue-aa); color: var(--cream); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(26,26,46,0.7);
+      z-index: 9000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--cream);
+      max-width: 600px; width: 90%;
+      padding: 3rem;
+      position: relative;
+      border-left: 4px solid var(--blue-aa);
+      animation: fadeUp 0.3s forwards;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1.2rem;
+      background: none; border: none; font-size: 1.8rem;
+      color: var(--ink); cursor: pointer; line-height: 1;
+    }
+    .modal-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem; font-weight: 900;
+      color: var(--light-blue); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700;
+      color: var(--dark); margin-bottom: 1.5rem;
+    }
+    .modal-body { font-size: 0.9rem; line-height: 2; color: var(--ink); }
     footer { background: var(--dark); color: #8A8A9A; text-align: center; padding: 2rem; font-size: 0.7rem; letter-spacing: 0.15em; }
 
     /* ── ANIMATIONS ── */
@@ -639,7 +691,50 @@
 
     </div>
   </section>
+  <!-- MODALS -->
+  <div id="modal1" class="modal-overlay" onclick="closeModal('modal1')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('modal1')">&times;</button>
+      <div class="modal-num">01</div>
+      <h3 class="modal-title">Consulenza Editoriale</h3>
+      <div class="modal-body">
+        <p>Inserisci qui le informazioni dettagliate sulla Consulenza Editoriale.</p>
+      </div>
+    </div>
+  </div>
 
+  <div id="modal2" class="modal-overlay" onclick="closeModal('modal2')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('modal2')">&times;</button>
+      <div class="modal-num">02</div>
+      <h3 class="modal-title">Scheda di Valutazione</h3>
+      <div class="modal-body">
+        <p>Inserisci qui le informazioni dettagliate sulla Scheda di Valutazione.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal3" class="modal-overlay" onclick="closeModal('modal3')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('modal3')">&times;</button>
+      <div class="modal-num">03</div>
+      <h3 class="modal-title">Editing Macro</h3>
+      <div class="modal-body">
+        <p>Inserisci qui le informazioni dettagliate sull'Editing Macro.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal4" class="modal-overlay" onclick="closeModal('modal4')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('modal4')">&times;</button>
+      <div class="modal-num">04</div>
+      <h3 class="modal-title">Correzione Bozze</h3>
+      <div class="modal-body">
+        <p>Inserisci qui le informazioni dettagliate sulla Correzione Bozze.</p>
+      </div>
+    </div>
+  </div>
   <!-- PROGETTI -->
   <section class="projects" id="projects">
     <div class="section-header">
